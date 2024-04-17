@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Đồng hồ đếm ngược</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Đồng hồ đếm ngược</h1>
+    <input type="number" id="minutes" placeholder="Nhập phút">
+    <input type="number" id="seconds" placeholder="Nhập giây">
+    <button onclick="startTimer()">START</button>
+    <button onclick="resetTimer()">RESET</button>
+    <p id="timer">00:00</p>
+    <audio id="alarm" src="alarm.mp3"></audio>
+    <script>
+        var alarmSound = document.getElementById("alarm");
+        var countdownInterval;
+        var originalTime;
+        var currentTime;
+
+        function formatTime(seconds) {
+            var mins = Math.floor(seconds / 60);
+            var secs = seconds % 60;
+            return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+        }
+
+        function startTimer() {
+            clearInterval(countdownInterval);
+            var minutes = document.getElementById("minutes").value;
+            var seconds = document.getElementById("seconds").value;
+            originalTime = minutes * 60 + parseInt(seconds);
+            currentTime = originalTime;
+            setTimer(currentTime);
+            countdownInterval = setInterval(updateCountdown, 1000);
+            if(!minutes || !seconds){ 
+                alert("Vui lòng nhập phút hoặc giây!")
+                return}
+            
+        }
+
+        function updateCountdown() {
+            currentTime--;
+            setTimer(currentTime);
+            
+            if(currentTime <= 0){
+                clearInterval(countdownInterval);
+                alarmSound.play();
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(countdownInterval);
+            currentTime = originalTime;
+            setTimer(currentTime);
+        }
+
+        function setTimer(seconds) {
+            document.getElementById('timer').innerHTML = formatTime(seconds);
+        }
+    </script>
+</body>
+</html>
